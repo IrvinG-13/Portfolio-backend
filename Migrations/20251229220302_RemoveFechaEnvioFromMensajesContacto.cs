@@ -5,7 +5,7 @@
 namespace irvinPortfolio.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDatabase : Migration
+    public partial class RemoveFechaEnvioFromMensajesContacto : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

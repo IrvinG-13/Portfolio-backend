@@ -38,15 +38,15 @@ namespace irvinPortfolio.Controllers
         // POST api/proyectos
         [Authorize] // Solo admin puede crear
         [HttpPost]
+        [Authorize]
+        [HttpPost]
         public async Task<IActionResult> CrearProyecto(ModeloProyecto proyecto)
         {
-            proyecto.FechaCreacion = DateTime.Now;
-
             _context.modeloProyectos.Add(proyecto);
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(ObtenerProyectos), new { id = proyecto.Id }, proyecto);
+            return Ok(proyecto);
         }
+
 
         // PUT api/proyectos/{id}
         [Authorize]

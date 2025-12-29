@@ -10,7 +10,6 @@
         public string RepoUrl { get; set; } = null!;
         public string DemoUrl { get; set; } = null!;
         public bool Destacado { get; set; } = false;
-        public DateTime FechaCreacion { get; set; } = DateTime.Now;
 
     }
 }

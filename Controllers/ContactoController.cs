@@ -24,14 +24,12 @@ namespace irvinPortfolio.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            mensaje.FechaEnvio = DateTime.Now;
-            mensaje.Leido = false;
-
             _context.modeloMensajeContacto.Add(mensaje);
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Mensaje enviado correctamente" });
         }
+
 
         // GET api/contacto
         [HttpGet]
