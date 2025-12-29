@@ -6,20 +6,19 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar Entity Framework Core con SQL Server
+// EF Core (por ahora dejar así, luego cambiamos DB)
 builder.Services.AddDbContext<AplicacionDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Agregar controladores
+// Controllers
 builder.Services.AddControllers();
 
-// 🔥 Configurar Swagger con soporte JWT
+// Swagger + JWT
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "irvinPortfolioApi", Version = "v1" });
 
-    // Configuración de seguridad JWT
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -27,7 +26,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Ingrese 'Bearer' seguido del token JWT"
+        Description = "Bearer {token}"
     });
 
     c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
@@ -46,7 +45,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Configurar CORS para permitir cualquier origen (solo para desarrollo)
+// CORS (Render + Vercel)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -57,7 +56,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configurar autenticación JWT
+// JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -79,17 +78,16 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configuración del middleware
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// 🔥 Swagger SIEMPRE ACTIVO (Render)
+app.UseSwagger();
+app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+// ❌ NO HTTPS EN RENDER
+// app.UseHttpsRedirection();
+
 app.UseCors("AllowAll");
 
-app.UseAuthentication(); // <- importante, antes de Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
